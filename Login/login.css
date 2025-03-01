@@ -1,0 +1,94 @@
+html,
+body {
+    padding: 0;
+    margin: 0;
+    font-family: sans-serif;
+    background-color: #000000;
+    color: #acada8;
+}
+
+.container {
+    position: fixed;
+    top: 38%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+svg,
+.form-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.form-container {
+    width: 270px;
+}
+
+svg {
+    width: 1000px;
+    pointer-events: none;
+}
+
+.form-container .form-row {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.form-container .form-row input {
+    width: 100%;
+    height: 30px;
+    margin: 0;
+    padding: 5px;
+    outline: none;
+    border: 2px solid #4B0082;
+    background-color: #0A0A0A;
+    color: #acada8;
+}
+
+.form-container .form-row input.valid {
+    border-color: #8A2BE2;
+}
+
+.form-container .form-row input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin: 0 10px 0 0;
+    padding: 0;
+    border: 2px solid #4B0082;
+    background-color: #0A0A0A;
+}
+
+.form-container .form-row input[type="submit"] {
+    height: 40px;
+    cursor: pointer;
+    border: none;
+    background-color: #4B0082;
+    color: #acada8;
+}
+
+.form-container .form-row input[type="submit"]:hover {
+    background-color: #6A0DAD;
+}
+
+.form-container label,
+.form-container input,
+.form-container input::placeholder {
+    font-size: 15px;
+    font-family: inherit;
+    color: #acada8;
+}
+
+.form-container input::placeholder {
+    color: #696969;
+}
+
+svg {
+    stroke-width: 1.2px;
+    stroke: #acada8;
+    fill: none
+}
