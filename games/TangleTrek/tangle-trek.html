@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tangle Trek</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* Confetti Animation */
+    @keyframes confetti {
+      0% { transform: translateY(0) rotate(0); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #ffeb3b;
+      border-radius: 50%;
+      animation: confetti 2s ease-out infinite;
+    }
+
+    /* Neon Orb Animation */
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+      70% { box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+    }
+
+    .neon-orb {
+      animation: pulse 2s infinite;
+    }
+
+    /* Glassmorphism Effect */
+    .glass {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Soft Violet Gradient */
+    .soft-violet-bg {
+      background: linear-gradient(135deg, #6a2fc1, #8a4fff);
+    }
+
+    /* Futuristic Font */
+    .futuristic-font {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    /* Button Hover Effect */
+    .neon-button {
+      background: linear-gradient(135deg, #6a2fc1, #8a4fff);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .neon-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .neon-button:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center text-white font-sans overflow-hidden soft-violet-bg">
+  <!-- Home Page -->
+  <div id="homePage" class="fixed inset-0 flex flex-col items-center justify-center transition-slow">
+    <h1 class="text-6xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 futuristic-font">
+      Tangle Trek
+    </h1>
+    <div class="space-y-4">
+      <button id="staticModeButton" class="w-64 px-6 py-3 neon-button text-white rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105">
+        Static Maze
+      </button>
+      <button id="stepModeButton" class="w-64 px-6 py-3 neon-button text-white rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105">
+        One-Step Maze
+      </button>
+      <button id="continuousModeButton" class="w-64 px-6 py-3 neon-button text-white rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105">
+        Continuous Maze
+      </button>
+    </div>
+  </div>
+
+  <!-- Game Canvas -->
+  <canvas id="gameCanvas" class="hidden rounded-lg shadow-2xl border-4 border-purple-600"></canvas>
+
+  <!-- Settings Button -->
+  <button id="settingsButton" class="fixed top-6 right-6 glass px-6 py-3 text-white rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105 hidden">
+    Settings
+  </button>
+
+  <!-- Settings Menu -->
+  <div id="settingsMenu" class="fixed top-20 right-6 glass p-6 rounded-lg shadow-lg hidden">
+    <button id="pauseButton" class="w-full px-6 py-3 neon-button text-white rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105">
+      Pause
+    </button>
+    <button id="addTimeButton" class="w-full px-6 py-3 neon-button text-white rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105 mt-4">
+      Add 25 Seconds
+    </button>
+    <button id="backButton" class="w-full px-6 py-3 neon-button text-white rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105 mt-4">
+      Back
+    </button>
+  </div>
+
+  <!-- Timer -->
+  <div class="timer fixed top-6 left-6 glass px-6 py-3 rounded-lg text-xl font-bold hidden futuristic-font">
+    Time: <span id="timeDisplay">0s</span>
+  </div>
+
+  <!-- Game Over Screen -->
+  <div id="gameOver" class="fixed inset-0 bg-black bg-opacity-80 flex flex-col items-center justify-center hidden">
+    <h1 class="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 futuristic-font">
+      YOU WON!
+    </h1>
+  </div>
+
+  <!-- Confetti Container -->
+  <div id="confettiContainer" class="fixed inset-0 pointer-events-none hidden"></div>
+
+  <!-- Confirmation Modal -->
+  <div id="confirmationModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center hidden">
+    <div class="glass p-6 rounded-lg shadow-lg text-center">
+      <p class="text-xl mb-4">Your game will not be saved. Are you sure?</p>
+      <button id="confirmBackButton" class="px-6 py-3 neon-button text-white rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105">
+        Yes
+      </button>
+      <button id="cancelBackButton" class="px-6 py-3 neon-button text-white rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105 ml-4">
+        No
+      </button>
+    </div>
+  </div>
+
+  <script src="tangle-trek.js"></script>
+</body>
+</html>
